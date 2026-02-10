@@ -24,7 +24,6 @@
             min-height: 100vh;
         }
 
-        /* Mobile Layout Container */
         .app-container {
             width: 100%;
             max-width: 420px;
@@ -37,7 +36,6 @@
             position: relative;
         }
 
-        /* Header */
         header {
             text-align: center;
             margin-bottom: 30px;
@@ -59,56 +57,30 @@
             margin-top: 5px;
         }
 
-        /* Live Status Card */
-        .status-card {
-            background: linear-gradient(145deg, #2a2a2a, #222);
-            padding: 20px;
-            border-radius: 16px;
-            text-align: center;
-            border: 1px solid #333;
-            margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .live-indicator {
-            position: absolute;
-            top: 15px;
-            right: 15px;
+        /* Token Cards (New) */
+        .token-box {
             display: flex;
-            align-items: center;
-            font-size: 10px;
-            color: #2ecc71;
-            font-weight: bold;
-            background: rgba(46, 204, 113, 0.1);
-            padding: 4px 8px;
-            border-radius: 20px;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+        
+        .token-card {
+            background: #252525;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            width: 48%;
+            border: 1px solid #333;
         }
 
-        .dot {
-            width: 8px;
-            height: 8px;
-            background: #2ecc71;
-            border-radius: 50%;
-            margin-right: 5px;
-            animation: pulse 1.5s infinite;
-        }
+        .token-num { font-size: 28px; font-weight: bold; color: var(--primary); }
+        .token-label { font-size: 10px; color: #aaa; text-transform: uppercase; margin-top: 5px; }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
-            70% { box-shadow: 0 0 0 6px rgba(46, 204, 113, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
-        }
-
-        .wait-time {
-            font-size: 42px;
-            font-weight: 700;
-            color: white;
-            margin: 10px 0 5px 0;
-        }
-
-        .wait-label {
-            color: #888;
+        /* Wait Time Badge */
+        .live-status {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ccc;
             font-size: 14px;
         }
 
@@ -121,7 +93,7 @@
 
         .services-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* 2 columns */
+            grid-template-columns: 1fr 1fr;
             gap: 15px;
             margin-bottom: 25px;
         }
@@ -148,9 +120,7 @@
         }
 
         /* Inputs */
-        .input-group {
-            margin-bottom: 15px;
-        }
+        .input-group { margin-bottom: 15px; }
 
         input {
             width: 100%;
@@ -161,12 +131,10 @@
             color: white;
             font-size: 16px;
             outline: none;
-            box-sizing: border-box; /* Fix padding issue */
+            box-sizing: border-box;
         }
 
-        input:focus {
-            border-color: var(--primary);
-        }
+        input:focus { border-color: var(--primary); }
 
         /* Action Button */
         .btn-main {
@@ -183,8 +151,22 @@
             transition: transform 0.2s;
         }
 
-        .btn-main:active {
-            transform: scale(0.98);
+        .btn-main:active { transform: scale(0.98); }
+
+        /* Admin Link (Hidden) */
+        .footer {
+            margin-top: auto;
+            text-align: center;
+            padding-top: 20px;
+        }
+        .admin-link {
+            text-decoration: none;
+            color: #333;
+            font-size: 10px;
+            border: 1px solid #333;
+            padding: 2px 5px;
+            border-radius: 4px;
+            opacity: 0.3;
         }
 
     </style>
@@ -197,34 +179,39 @@
             <p class="tagline">Premium Grooming Experience</p>
         </header>
 
-        <div class="status-card">
-            <div class="live-indicator">
-                <div class="dot"></div> LIVE
+        <div class="token-box">
+            <div class="token-card">
+                <div class="token-num" id="current-token">--</div>
+                <div class="token-label">Now Serving</div>
             </div>
-            <h2 class="wait-time" id="wait-time">-- min</h2>
-            <div class="wait-label">Estimated Wait Time</div>
-            <div style="margin-top: 10px; font-size: 12px; color: #666;">
-                <span id="people-count">0</span> people ahead of you
+            <div class="token-card" style="border-color: #444;">
+                <div class="token-num" id="my-token">--</div>
+                <div class="token-label">Your Token</div>
             </div>
         </div>
 
-        <h3 class="section-title">Select Service</h3>
+        <div class="live-status">
+            Estimated Wait: <span id="wait-time" style="color: var(--primary); font-weight: bold;">0 min</span> 
+            (<span id="people-count">0</span> people ahead)
+        </div>
+
+        <h3 class="section-title">Select Services (Tap multiple)</h3>
         <div class="services-grid">
-            <div class="service-card selected" onclick="selectService(this, 'Haircut')">
+            <div class="service-card" onclick="toggleService(this, 'Haircut')">
                 <span class="service-icon">💇‍♂️</span>
                 <div>Haircut</div>
             </div>
-            <div class="service-card" onclick="selectService(this, 'Beard Trim')">
+            <div class="service-card" onclick="toggleService(this, 'Beard')">
                 <span class="service-icon">🧔</span>
-                <div>Beard Trim</div>
+                <div>Beard</div>
             </div>
-            <div class="service-card" onclick="selectService(this, 'Facial')">
+            <div class="service-card" onclick="toggleService(this, 'Facial')">
                 <span class="service-icon">💆‍♂️</span>
                 <div>Facial</div>
             </div>
-            <div class="service-card" onclick="selectService(this, 'Full Package')">
-                <span class="service-icon">✨</span>
-                <div>Full Pack</div>
+            <div class="service-card" onclick="toggleService(this, 'Massage')">
+                <span class="service-icon">💆</span>
+                <div>Massage</div>
             </div>
         </div>
 
@@ -236,27 +223,32 @@
             <input type="tel" id="phone" placeholder="Phone Number">
         </div>
 
-        <button class="btn-main" onclick="bookNow()">JOIN THE QUEUE</button>
+        <button class="btn-main" onclick="bookNow()">BOOK MY TURN</button>
 
-        <p style="text-align: center; color: #555; font-size: 11px; margin-top: 20px;">
-            Powered by PRATHOMIX
-        </p>
+        <div class="footer">
+            <p style="color: #555; font-size: 11px;">Powered by PRATHOMIX</p>
+            <a href="admin.html" class="admin-link">Admin Login</a>
+        </div>
     </div>
 
     <script>
-        // --- ⚠️ IMPORTANT: Paste your Render URL here ---
-        const API_URL =  "https://salon-startup-1.onrender.com"; 
+        // --- ⚠️ UPDATE YOUR RENDER URL HERE ---
+        const API_URL = "https://salon-startup-2.onrender.com"; 
 
-        let selectedService = "Haircut"; // Default
+        let selectedServices = [];
+        let myTokenId = localStorage.getItem('myToken') || null;
 
-        function selectService(element, serviceName) {
-            // Remove 'selected' class from all cards
-            document.querySelectorAll('.service-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-            // Add 'selected' to clicked card
-            element.classList.add('selected');
-            selectedService = serviceName;
+        // Toggle Service (Multi-Select Logic)
+        function toggleService(element, serviceName) {
+            if (selectedServices.includes(serviceName)) {
+                // Agar pehle se selected hai, toh hata do
+                selectedServices = selectedServices.filter(s => s !== serviceName);
+                element.classList.remove('selected');
+            } else {
+                // Agar selected nahi hai, toh add karo
+                selectedServices.push(serviceName);
+                element.classList.add('selected');
+            }
         }
 
         async function loadStatus() {
@@ -266,8 +258,23 @@
                 
                 document.getElementById('wait-time').innerText = data.wait_time + " min";
                 document.getElementById('people-count').innerText = data.people_ahead;
+                document.getElementById('current-token').innerText = "#" + data.current_token;
+
+                if (myTokenId) {
+                    document.getElementById('my-token').innerText = "#" + myTokenId;
+                    
+                    // Alert logic: Agar user ka number aa gaya
+                    if (data.current_token == myTokenId) {
+                        // Optional: Play sound or vibrate here
+                        alert("🎉 Bhai Aapka Number Aa Gaya! Jaldi Aao!");
+                        // Token clear kar do taaki baar baar alert na aaye
+                        localStorage.removeItem('myToken');
+                        myTokenId = null;
+                        document.getElementById('my-token').innerText = "--";
+                    }
+                }
             } catch (error) {
-                console.log("Connecting to backend...");
+                console.log("Connecting...");
             }
         }
 
@@ -275,38 +282,56 @@
             const name = document.getElementById('name').value;
             const phone = document.getElementById('phone').value;
 
-            if(!name || !phone) {
-                alert("Please fill in your details");
+            if (selectedServices.length === 0) {
+                alert("Please select at least one service!");
+                return;
+            }
+            if (!name || !phone) {
+                alert("Please fill in your name and phone number");
                 return;
             }
 
             const btn = document.querySelector('.btn-main');
-            btn.innerText = "Booking..."; // Feedback
+            btn.innerText = "Booking...";
 
             try {
+                // Note: 'service' key ab array bhej raha hai (list of services)
                 const response = await fetch(`${API_URL}/book`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         name: name,
                         phone: phone,
-                        service: selectedService
+                        service: selectedServices // Array bhej rahe hain
                     })
                 });
 
-                if(response.ok) {
-                    alert("✅ Booking Confirmed! We will notify you.");
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Success
+                    myTokenId = result.token;
+                    localStorage.setItem('myToken', myTokenId);
+                    
+                    alert("✅ Booking Confirmed! Your Token is #" + myTokenId);
+                    
+                    // Form Reset
                     document.getElementById('name').value = '';
                     document.getElementById('phone').value = '';
-                    loadStatus(); // Refresh time immediately
+                    // Services Reset
+                    selectedServices = [];
+                    document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+                    
+                    loadStatus();
                 } else {
-                    alert("Something went wrong");
+                    // Error (Spam warning, etc.)
+                    alert("⚠️ Error: " + result.error);
                 }
             } catch (error) {
                 alert("Server Error. Check internet connection.");
             }
             
-            btn.innerText = "JOIN THE QUEUE"; // Reset button
+            btn.innerText = "BOOK MY TURN";
         }
 
         // Load status every 5 seconds
