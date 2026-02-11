@@ -100,4 +100,4 @@ Want to run this project on your local machine? Follow these steps:<br>
 ## 👨‍💻 Author<br>
 Built with ❤️ by **Pratham Kumar Singh**<br>
 * Passionate about AI, Data Science, and building startups that solve real-world problems.<br>
-* Connect with me on [LinkedIn](Insert your LinkedIn Profile Link)<br>
+
